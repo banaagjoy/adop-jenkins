@@ -13,7 +13,7 @@ if (!env['ADOP_JDK_ENABLED'].toBoolean()) {
 // JDK_VERSION can be defined as a single version or a comma separated string of versions
 // eg. 
 // JDK_VERSION=jdk-7u25-oth-JPR
-// JDK_VERSION=jdk-7u25-oth-JPR,jdk-8u60-oth-JPR
+JDK_VERSION=jdk-7u25-oth-JPR,jdk-8u60-oth-JPR
 
 def jdk_version = env['JDK_VERSION']
 def jdk_version_list = jdk_version.split(',')
@@ -30,6 +30,9 @@ Thread.start {
     def jdk_installations = desc_jdkTool.getInstallations()
 
     jdk_version_list.eachWithIndex { version, index ->
+	
+		println "Version: $version index: $index"
+		
         def jdkInstaller = new JDKInstaller(version,true)
         def installSourceProperty = new InstallSourceProperty([jdkInstaller])
         
@@ -40,7 +43,8 @@ Thread.start {
         {
             name="ADOP JDK"
         }
-
+		println "jdk name: $name"
+		
         def jdk_inst = new JDK(
           name, // Name
           "", // Home
@@ -65,7 +69,11 @@ Thread.start {
 
     desc_jdkTool.setInstallations((JDK[]) jdk_installations)
     desc_jdkTool.save()
+	
+	println "Saving the jdk's"
 
     // Save the state
     instance.save()
+	
+	println "Saving the instances"
 }
