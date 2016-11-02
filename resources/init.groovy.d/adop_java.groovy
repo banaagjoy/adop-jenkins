@@ -13,7 +13,7 @@ if (!env['ADOP_JDK_ENABLED'].toBoolean()) {
 // JDK_VERSION can be defined as a single version or a comma separated string of versions
 // eg. 
 // JDK_VERSION=jdk-7u25-oth-JPR
-JDK_VERSION=jdk-7u25-oth-JPR,jdk-8u60-oth-JPR
+// JDK_VERSION=jdk-7u25-oth-JPR,jdk-8u60-oth-JPR
 
 def jdk_version = env['JDK_VERSION']
 def jdk_version_list = jdk_version.split(',')
@@ -26,7 +26,7 @@ Thread.start {
 
     // JDK
     println "--> Configuring JDK"
-    def desc_jdkTool = instance.getDescriptor("hudson.Model.JDK")
+    def desc_jdkTool = new JDK.DescriptorImpl()
     def jdk_installations = desc_jdkTool.getInstallations()
 
     jdk_version_list.eachWithIndex { version, index ->
