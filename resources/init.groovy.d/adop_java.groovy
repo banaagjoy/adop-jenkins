@@ -53,7 +53,7 @@ Thread.start {
 
         // Only add a Java installation if it does not already exist - do not overwrite existing config
         
-        def java_inst_exists = false
+        def jdk_inst_exists = false
         jdk_installations.each {
           installation = (JDK) it
             if ( jdk_inst.getName() ==  installation.getName() ) {
