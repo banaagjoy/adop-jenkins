@@ -94,8 +94,8 @@ Thread.start {
     if ( gerritUsername != null) {
     	envVars.put("GERRIT_JENKINS_USERNAME", gerritUsername)
     }
-    
-    // Jenkins SSH Credentials
+
+    // Jenkins SSH Credentialscd 
     println "--> Registering SSH Credentials"
     def system_credentials_provider = SystemCredentialsProvider.getInstance()
 
