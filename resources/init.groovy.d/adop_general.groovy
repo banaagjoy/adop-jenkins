@@ -19,7 +19,7 @@ def dockerTLSVerify = env['DOCKER_TLS_VERIFY']
 def dockerHost = env['DOCKER_HOST']
 def dockerCertPath = env['DOCKER_CLIENT_CERT_PATH']
 def dockerNetworkName = env['DOCKER_NETWORK_NAME']
-def gerritUsername = env['GERRIT_JENKINS_USERNAME'] ?: "jenkins"
+def gerritUsername = env['GERRIT_JENKINS_USERNAME'] ?: "testsss"
 
 // Constants
 def instance = Jenkins.getInstance()
