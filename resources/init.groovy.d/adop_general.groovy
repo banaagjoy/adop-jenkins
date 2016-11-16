@@ -19,7 +19,7 @@ def dockerTLSVerify = env['DOCKER_TLS_VERIFY']
 def dockerHost = env['DOCKER_HOST']
 def dockerCertPath = env['DOCKER_CLIENT_CERT_PATH']
 def dockerNetworkName = env['DOCKER_NETWORK_NAME']
-def gerritUsername = env['GERRIT_JENKINS_USERNAME'] ?: "testsss"
+def gerritUsername = env['GERRIT_JENKINS_USERNAME']
 
 // Constants
 def instance = Jenkins.getInstance()
@@ -90,7 +90,7 @@ Thread.start {
         envVars.put("DOCKER_NETWORK_NAME", dockerNetworkName)
     }
 	
-    //Set Gerrit variable
+    //Set Gerrit username variable
     if ( gerritUsername != null) {
     	envVars.put("GERRIT_JENKINS_USERNAME", gerritUsername)
     }
