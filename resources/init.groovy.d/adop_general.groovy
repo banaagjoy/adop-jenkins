@@ -19,7 +19,7 @@ def dockerTLSVerify = env['DOCKER_TLS_VERIFY']
 def dockerHost = env['DOCKER_HOST']
 def dockerCertPath = env['DOCKER_CLIENT_CERT_PATH']
 def dockerNetworkName = env['DOCKER_NETWORK_NAME']
-def gerritUsername = env['GERRIT_JENKINS_USERNAME']
+//def gerritUsername = env['GERRIT_JENKINS_USERNAME']
 
 // Constants
 def instance = Jenkins.getInstance()
@@ -91,9 +91,11 @@ Thread.start {
     }
 	
     //Set Gerrit username variable
-    if ( gerritUsername != null) {
-    	envVars.put("GERRIT_JENKINS_USERNAME", gerritUsername)
-    }
+    println "--> Setting GERRIT_JENKINS_USERNAME..."
+    // if ( gerritUsername != null) {
+    // 	envVars.put("GERRIT_JENKINS_USERNAME", gerritUsername)
+    // }
+    println "--> Finished setting GERRIT_JENKINS_USERNAME!!"
 
     // Jenkins SSH Credentialscd 
     println "--> Registering SSH Credentials"
