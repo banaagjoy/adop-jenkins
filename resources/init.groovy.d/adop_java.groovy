@@ -4,7 +4,7 @@ import hudson.tools.*;
 
 // Check if enabled
 def env = System.getenv()
-if (!env['ADOP_JDK_ENABLED'].toBoolean()) {
+if (env['JDK_VERSION'] == null) {
     println "--> ADOP Multi JDK Disabled"
     return
 }
