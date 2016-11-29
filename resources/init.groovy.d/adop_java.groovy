@@ -9,12 +9,6 @@ if (env['JDK_VERSION'] == null) {
     return
 }
 
-// Check if credentials are provided
-if (env['ORACLE_USER'] == null || env['ORACLE_PASS'] == null) {
-    println "--> ADOP Multi JDK - oracle credentials not provided. Please specify ORACLE_USER and ORACLE_PASS environment variables."
-    return
-}
-
 // Variables
 // JDK_VERSION can be defined as a single version or a comma separated string of versions
 // eg. 
@@ -23,10 +17,6 @@ if (env['ORACLE_USER'] == null || env['ORACLE_PASS'] == null) {
 
 def jdk_version = env['JDK_VERSION']
 def jdk_version_list = jdk_version.split(',')
-
-// fetch oracle username and password from environment variables
-def oracle_user = env['ORACLE_USER']
-def oracle_pass = env['ORACLE_PASS']
 
 // Constants
 def instance = Jenkins.getInstance()
@@ -44,12 +34,6 @@ Thread.start {
 		println "Version: $version index: $index"
 		
         def jdkInstaller = new JDKInstaller(version,true)
-
-        // authenticate to Oracle
-        def desc_jdkInstaller = jdkInstaller.getDescriptor()
-        desc_jdkInstaller.doPostCredential(oracle_user, oracle_pass)
-        desc_jdkInstaller.save()
-
         def installSourceProperty = new InstallSourceProperty([jdkInstaller])
         
         def name="ADOP JDK_" + version
