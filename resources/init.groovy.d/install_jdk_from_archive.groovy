@@ -5,7 +5,8 @@ import hudson.model.JDK;
 import hudson.model.JDK.DescriptorImpl;
 import hudson.tools.ZipExtractionInstaller;
 
-/*
+/**
+ * @author Mihail Ivanov <mihail.ivanov@accenture.com>
  * Installs one or more JDKs from archives.
  * Environment variables specified in docker run command/docker compose:
  *  - JDK_ARCHIVES: one or more JDKs archives
