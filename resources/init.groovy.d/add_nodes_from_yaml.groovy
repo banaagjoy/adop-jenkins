@@ -73,7 +73,7 @@ Thread.start {
 			dumb_slave.setRetentionStrategy(new RetentionStrategy.Demand())
 		}
 		println '--> Adding node to jenkins'
-		instance.addNode(dumb)
+		instance.addNode(dumb_slave)
 	}
 	println '--> Finished jenkins nodes configuration'
 
