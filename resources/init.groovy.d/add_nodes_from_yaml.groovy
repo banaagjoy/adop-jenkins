@@ -7,13 +7,13 @@ import hudson.slaves.ComputerLauncher
 import hudson.plugins.sshslaves.SSHLauncher
 import hudson.model.Node.Mode
 import jenkins.model.Jenkins
-@Grab("org.jyaml:jyaml:1.3")
+// /var/lib/docker/volumes/jenkins_home/_data/war/WEB-INF/lib
 import org.ho.yaml.Yaml
 
 /**
  * @author Mihail Ivanov <mihail.ivanov@accenture.com>
  * Adds nodes to Jenkins on startup.
- * Nodes are specified in a yaml file located at /yaml/nodes.yaml
+ * Nodes are specified in a yaml file located at /jenkins_home/nodes.yaml
  */
 
 def instance = Jenkins.getInstance()
@@ -22,8 +22,8 @@ Thread.start {
     sleep 10000
 
 	// load yaml file
-	println '--> Loading yaml file from /yaml/nodes.yaml'
-	String file_content = new File('/yaml/nodes.yaml').getText('UTF-8')
+	println '--> Loading yaml file from /var/jenkins_home/nodes.yaml'
+	String file_content = new File('/var/jenkins_home/nodes.yaml').getText('UTF-8')
 	def yaml_content = Yaml.load(file_content)
 
 	yaml_content.each { node ->
@@ -60,7 +60,7 @@ Thread.start {
 	    println "---------------"
 
 		// create nodes
-		def ssh_launcher = new SSHLauncher(node_launch_method_host, node_launch_method_port as Integer, node_launch_method_credentials, '', '', '', '', new Integer(0), Integer(0), Integer(0))
+		ComputerLauncher ssh_launcher = new SSHLauncher(node_launch_method_host, node_launch_method_port as Integer, node_launch_method_credentials, '', '', '', '', new Integer(0), new Integer(0), new Integer(0))
 		def dumb_slave = new DumbSlave(node_name, node_remote_fs_root, ssh_launcher)
 
 		dumb_slave.setLabelString(node_labels)
