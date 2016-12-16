@@ -1,3 +1,4 @@
+import hudson.model.*
 import jenkins.model.*
 import hudson.security.*
 
@@ -13,12 +14,13 @@ import hudson.security.*
 // TODO(mihail): Stop executing the script if environment variables are missing
 
 // fetch environment variables
+/*
 def env = System.getenv()
 def matrix_admin_groups = env['MATRIX_ADMIN_GROUPS']
 def matrix_admin_groups_list = matrix_admin_groups.split(',')
 def matrix_non_admin_groups = env['MATRIX_NON_ADMIN_GROUPS']
 def matrix_non_admin_groups_list = matrix_non_admin_groups.split(',')
-
+*/
 // fetch Jenkins state
 def instance = Jenkins.getInstance()
 
@@ -32,13 +34,16 @@ Thread.start {
     // Permissions - http://javadoc.jenkins.io/archive/jenkins-1.609/hudson/security/Permission.html
     // TODO(mihail): implement a for loop instead
     strategy.add(Jenkins.ADMINISTER, 'GOEP.DEV.DCSC.Mobilisation')
-
-    def non_admin_groups_permissions_map = [:]
-    non_admin_groups_permissions_map.add(Permission.fromId('Hudson.Read'))
-    non_admin_groups_permissions_map.add(Permission.fromId('View.Read'))
+    // TODO(mihail): remove adop user
+    strategy.add(Jenkins.ADMINISTER, 'adop')
+    Set<Permission> non_admin_groups_permissions_map = new HashSet<Permission>();
+    non_admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.Read'))
+    non_admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Read'))
     // def non_admin_groups_permission = new Permission()
     // TODO(mihail): for loop again
-    strategy.add(non_admin_groups_permissions_map, 'GOEP.RM.HYB.AO')
+    non_admin_groups_permissions_map.each { permission ->
+        strategy.add(permission, 'GOEP.RM.HYB.AO')
+    }
 
     // add matrix-based security
     instance.setAuthorizationStrategy(strategy)
