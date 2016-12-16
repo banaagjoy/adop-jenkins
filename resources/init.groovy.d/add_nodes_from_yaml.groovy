@@ -16,6 +16,8 @@ import org.ho.yaml.Yaml
  * Nodes are specified in a yaml file located at /jenkins_home/nodes.yaml
  */
 
+return
+
 def instance = Jenkins.getInstance()
 
 Thread.start {
