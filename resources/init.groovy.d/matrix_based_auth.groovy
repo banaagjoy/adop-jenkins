@@ -1,6 +1,7 @@
 import hudson.model.*
 import jenkins.model.*
 import hudson.security.*
+import hudson.scm.*
 
 /**
  * @author Mihail Ivanov <mihail.ivanov@accenture.com>
@@ -11,16 +12,18 @@ import hudson.security.*
  * https://wiki.jenkins-ci.org/display/JENKINS/Matrix-based+security
  */
 
-// TODO(mihail): Stop executing the script if environment variables are missing
-
-// fetch environment variables
-/*
 def env = System.getenv()
+if (env['MATRIX_ADMIN_GROUPS'] == null) {
+    println '--> Admin Groups environment variables are missing => Stopping script execution.'
+    return
+}
+
+// Fetch environment variables
 def matrix_admin_groups = env['MATRIX_ADMIN_GROUPS']
 def matrix_admin_groups_list = matrix_admin_groups.split(',')
 def matrix_non_admin_groups = env['MATRIX_NON_ADMIN_GROUPS']
 def matrix_non_admin_groups_list = matrix_non_admin_groups.split(',')
-*/
+
 // fetch Jenkins state
 def instance = Jenkins.getInstance()
 
@@ -32,17 +35,52 @@ Thread.start {
     def strategy = new GlobalMatrixAuthorizationStrategy()
 
     // Permissions - http://javadoc.jenkins.io/archive/jenkins-1.609/hudson/security/Permission.html
-    // TODO(mihail): implement a for loop instead
-    strategy.add(Jenkins.ADMINISTER, 'GOEP.DEV.DCSC.Mobilisation')
-    // TODO(mihail): remove adop user
-    strategy.add(Jenkins.ADMINISTER, 'adop')
+    println '--> Configuring Permissions for Admin Groups'
+    //list of all permission
+    Set<Permission> admin_groups_permissions_map = new HashSet<Permission>();
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Build'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Configure'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Connect'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Create'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Delete'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Computer.Disconnect'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.Administer'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.Read'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.ConfigureUpdateCenter'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.RunScripts'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.UploadPlugins'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Build'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Cancel'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Configure'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Create'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Delete'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Discover'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Read'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Workspace'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Item.Move'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Run.Delete'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.Run.Update'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Configure'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Create'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Delete'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Read'))
+    admin_groups_permissions_map.add(Permission.fromId('hudson.scm.SCM.Tag'))
+
+    for(adGroup in matrix_admin_groups_list) {
+        for(permission in admin_groups_permissions_map) {
+            strategy.add(permission, adGroup)
+        }
+    }
+
+    println '--> Configuring Permissions for Non-Admin Groups'
     Set<Permission> non_admin_groups_permissions_map = new HashSet<Permission>();
     non_admin_groups_permissions_map.add(Permission.fromId('hudson.model.Hudson.Read'))
     non_admin_groups_permissions_map.add(Permission.fromId('hudson.model.View.Read'))
-    // def non_admin_groups_permission = new Permission()
-    // TODO(mihail): for loop again
-    non_admin_groups_permissions_map.each { permission ->
-        strategy.add(permission, 'GOEP.RM.HYB.AO')
+
+    for(nonAdGroup in matrix_non_admin_groups_list) {
+        for(permission in non_admin_groups_permissions_map) {
+            strategy.add(permission, nonAdGroup)
+        }
     }
 
     // add matrix-based security
