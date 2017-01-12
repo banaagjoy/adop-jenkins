@@ -31,7 +31,7 @@ Thread.start {
    	// define credentials
    	// parameters (credential_id, credential_username, credential_password, credential_description)
 	def ldap_service_user = new Tuple(env['CREDENTIALS_LDAP_SERVICE_USER_ID'], env['CREDENTIALS_LDAP_SERVICE_USER'], env['CREDENTIALS_LDAP_SERVICE_USER_PASSWORD'], env['CREDENTIALS_LDAP_SERVICE_DESCRIPTION'])
-	def sonar_user = new Tuple(env['CREDENTIALS_SONAR_USER_ID'], env['CREDENTIALS_SONAR_USER'], env['CREDENTIALS_SONAR_USER_PASSWORD'], env['CREDENTIALS_SONAR_DESCRIPTION'])
+	def sonar_user = new Tuple(env['CREDENTIALS_SONAR_USER_ID'], env['CREDENTIALS_SONAR_USER'], env['CREDENTIALS_SONAR_USER_PASSWORD'], env['CREDENTIALS_SONAR_USER_DESCRIPTION'])
 
 	// TODO(mihail): jenkinsslave + private key
     // define two lists with all the credentials
