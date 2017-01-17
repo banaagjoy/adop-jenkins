@@ -27,34 +27,19 @@ def instance = Jenkins.getInstance()
 
 
 Thread.start {
-	// trying out impersonate
-	// TODO(mihail): Initial admin user
+	// executing the following lines as admin user instead of anonymous
 	ACL.impersonate(User.get(env['INITIAL_ADMIN_USER']).impersonate())
 	println 'User: ' + User.current()
-	// if instance is secure add permissions to anonymous user
-	// if (instance.isUseSecurity()) {
-	// 	if (instance.authorizationStrategy instanceof GlobalMatrixAuthorizationStrategy) {
-	// 		println '--> Global AuthorizationStrategy is configured'
-	// 		AuthorizationStrategy strategy = instance.authorizationStrategy
-	// 		println '--> Giving anonymous user permissions to create new credentials'
-	// 		strategy.add(Permission.fromId('com.cloudbees.plugins.credentials.CredentialsProvider.Create'), 'anonymous')
-	// 		instance.setAuthorizationStrategy(strategy)
-	// 	}
-	// }
-
-	// println '--> Turning off security'
-	// instance.setAuthorizationStrategy(new AuthorizationStrategy.Unsecured())
 
     println '--> Configuring global credentials'
    	// define credentials
    	// parameters (credential_id, credential_username, credential_password, credential_description)
 	def ldap_service_user = new Tuple(env['CREDENTIALS_LDAP_SERVICE_USER_ID'], env['CREDENTIALS_LDAP_SERVICE_USER'], env['CREDENTIALS_LDAP_SERVICE_USER_PASSWORD'], env['CREDENTIALS_LDAP_SERVICE_DESCRIPTION'])
 	def sonar_user = new Tuple(env['CREDENTIALS_SONAR_USER_ID'], env['CREDENTIALS_SONAR_USER'], env['CREDENTIALS_SONAR_USER_PASSWORD'], env['CREDENTIALS_SONAR_USER_DESCRIPTION'])
-	def new_user = new Tuple('new_user_id_two', 'new_user_two', 'new_pass_two', 'a new user two')
 
 	// TODO(mihail): jenkinsslave + private key
     // define two lists with all the credentials
-    user_with_password_list = [sonar_user, ldap_service_user, new_user]
+    user_with_password_list = [sonar_user, ldap_service_user]
 
 	// http://javadoc.jenkins-ci.org/credentials/com/cloudbees/plugins/credentials/SystemCredentialsProvider.html
 
@@ -88,19 +73,6 @@ Thread.start {
 	}
 
     println '--> Finished global credentials configuration'
-
- //    if (instance.isUseSecurity()) {
-	// 	if (instance.authorizationStrategy instanceof GlobalMatrixAuthorizationStrategy) {
-	// 		println '--> Global AuthorizationStrategy is configured'
-	// 		AuthorizationStrategy strategy = instance.authorizationStrategy
-	// 		println '--> Removing anonymous user permissions to create new credentials'
-	// 		boolean bla = false
-	// 		// Permission create_credentials = Permission.fromId('com.cloudbees.plugins.credentials.CredentialsProvider.Create').setEnabled(bla)
-	// 		println Permission.fromId('com.cloudbees.plugins.credentials.CredentialsProvider.Create').getClass()
-	// 		strategy.add(create_credentials, 'anonymous')
-	// 		instance.setAuthorizationStrategy(strategy)
-	// 	}
-	// }
 
     // Save the state
     instance.save()
