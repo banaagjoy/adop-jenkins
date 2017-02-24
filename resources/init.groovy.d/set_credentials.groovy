@@ -12,6 +12,7 @@ import jenkins.security.plugins.ldap.*
  * @author Mihail Ivanov <mihail.ivanov@accenture.com>
  * Sets global credentials
  * Environment variables specified in docker run command/docker compose:
+ *  - CREDENTIALS_IMPERSONATE_USER
  *  - CREDENTIALS_LDAP_SERVICE_USER_ID
  *  - CREDENTIALS_LDAP_SERVICE_USER
  *  - CREDENTIALS_LDAP_SERVICE_USER_PASSWORD
@@ -36,7 +37,7 @@ def instance = Jenkins.getInstance()
 
 Thread.start {
 	// executing the following lines as admin user instead of anonymous
-	ACL.impersonate(User.get(env['INITIAL_ADMIN_USER']).impersonate())
+	ACL.impersonate(User.get(env['CREDENTIALS_IMPERSONATE_USER']).impersonate())
 	println 'Executing script as user: ' + User.current()
 
     println '--> Configuring global credentials'
